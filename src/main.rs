@@ -1,6 +1,6 @@
 use actix_web::{web, App, HttpServer};
 use cosy_gameapi::{
-    routes::{get_assets_by_id, search_games},
+    routes::{get_assets_by_id, get_game, search_games},
     GlobalState,
 };
 
@@ -15,6 +15,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     HttpServer::new(move || {
         App::new()
             .service(get_assets_by_id)
+            .service(get_game)
             .service(search_games)
             .app_data(global_state.clone())
     })
