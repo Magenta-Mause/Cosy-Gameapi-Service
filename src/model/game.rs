@@ -23,6 +23,17 @@ impl From<steamgriddb_api::search::SearchResult> for Game {
     }
 }
 
+impl From<steamgriddb_api::games::GameInfo> for Game {
+    fn from(result: steamgriddb_api::games::GameInfo) -> Self {
+        Game {
+            id: result.id,
+            name: result.name,
+            logo_url: None,
+            hero_url: None,
+        }
+    }
+}
+
 #[derive(Serialize, Clone)]
 pub struct GameList {
     pub games: Vec<Game>,

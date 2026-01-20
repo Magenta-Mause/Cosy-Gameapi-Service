@@ -20,6 +20,43 @@ pub struct SearchGamesQuery {
     pub include_logo: Option<bool>,
 }
 
+#[derive(Deserialize)]
+pub struct GetGameQuery {
+    pub id: usize,
+    pub include_hero: Option<bool>,
+    pub include_logo: Option<bool>,
+}
+
+#[get("/game")]
+pub async fn get_game(
+    global_data: Data<GlobalState>,
+    query: Query<GetGameQuery>,
+) -> Response<Game> {
+    let Ok(result) = global_data.get_api(query.id).await else {
+        return Response::error(
+            "could not find the specified game".into(),
+            StatusCode::NOT_FOUND,
+        );
+    };
+
+    let mut game: Game = result.into();
+
+    let service = global_data.steamgriddb_service();
+    if query.include_logo.unwrap_or(false) {
+        if let Ok(Some(url)) = service.get_first_logo_by_game_id(game.id).await {
+            game.logo_url = Some(url);
+        }
+    }
+
+    if query.include_hero.unwrap_or(false) {
+        if let Ok(Some(url)) = service.get_first_hero_by_game_id(game.id).await {
+            game.hero_url = Some(url);
+        }
+    }
+
+    Response::success(game)
+}
+
 #[get("/games")]
 pub async fn search_games(
     global_data: Data<GlobalState>,

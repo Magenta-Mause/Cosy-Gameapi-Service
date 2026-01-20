@@ -1,7 +1,7 @@
 use std::{error::Error, sync::Arc};
 
 use reqwest::header::{HeaderMap, HeaderValue};
-use steamgriddb_api::search::SearchResult;
+use steamgriddb_api::{games::GameInfo, search::SearchResult};
 
 use crate::services::steamgriddb_service::SteamgriddbService;
 
@@ -38,6 +38,12 @@ impl GlobalState {
 
     pub async fn search_api(&self, query: &str) -> Result<Vec<SearchResult>, Box<dyn Error>> {
         self.steamgriddb_api_client.search(query).await
+    }
+
+    pub async fn get_api(&self, game_id: usize) -> Result<GameInfo, Box<dyn Error>> {
+        self.steamgriddb_api_client
+            .get_game_info_for_id(game_id)
+            .await
     }
 
     pub fn steamgriddb_service(&self) -> SteamgriddbService {
