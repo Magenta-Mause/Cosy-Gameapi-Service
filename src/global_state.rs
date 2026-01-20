@@ -1,7 +1,7 @@
 use std::{error::Error, sync::Arc};
 
 use reqwest::header::{HeaderMap, HeaderValue};
-use steamgriddb_api::{games::GameInfo, search::SearchResult};
+use steamgriddb_api::{search::SearchResult};
 
 use crate::services::steamgriddb_service::SteamgriddbService;
 
